@@ -15,7 +15,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
-    origin: ["http://localhost:3000",'https://randomblog-mern-client-app.vercel.app/'], // Allow requests from localhost:3000
+    origin: [
+        "http://localhost:3000",
+        "https://randomblog-mern-client-app.vercel.app",
+        "https://randomblog-mern-client-app-git-main-des-projects-c11f252c.vercel.app",
+        "https://randomblog-mern-client-p3wxnpoay-des-projects-c11f252c.vercel.app"
+    ],
     credentials: true, // Allow cookies and authorization headers
 };
 
@@ -42,6 +47,16 @@ const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
     console.log(`API is now online at http://localhost:${PORT}`);
+});
+
+// Error handling for CORS issues
+app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+        // Handle CORS unauthorized errors
+        res.status(401).json({ error: 'Unauthorized request' });
+    } else {
+        next();
+    }
 });
 
 module.exports = { app, mongoose };
